@@ -1,80 +1,83 @@
 -- Users Table
 CREATE TABLE Users (
     user_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE
 );
 
 -- Devices Table
 CREATE TABLE Devices (
     device_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES Users(user_id) ON DELETE CASCADE,
-    brand VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_id INT REFERENCES Users(user_id),
+    brand VARCHAR(50),
+    model VARCHAR(50),
+    status VARCHAR(20),
+    created_at TIMESTAMP DEFAULT NOW()
 );
 
 -- Features Table
 CREATE TABLE Features (
     feature_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
+    feature_name VARCHAR(100) UNIQUE
 );
 
 -- User Activities Table
 CREATE TABLE UserActivities (
     activity_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES Users(user_id) ON DELETE CASCADE,
-    device_id INT REFERENCES Devices(device_id) ON DELETE CASCADE,
-    action VARCHAR(255) NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_id INT REFERENCES Users(user_id),
+    device_id INT REFERENCES Devices(device_id),
+    action TEXT,
+    timestamp TIMESTAMP DEFAULT NOW()
 );
 
 -- Settings Table
 CREATE TABLE Settings (
     setting_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES Users(user_id) ON DELETE CASCADE,
-    preference_key VARCHAR(255) NOT NULL,
-    preference_value VARCHAR(255) NOT NULL
+    user_id INT REFERENCES Users(user_id),
+    preference_name VARCHAR(100),
+    preference_value VARCHAR(100)
 );
 
 -- Alerts Table
 CREATE TABLE Alerts (
     alert_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES Users(user_id) ON DELETE CASCADE,
-    device_id INT REFERENCES Devices(device_id) ON DELETE CASCADE,
-    alert_type VARCHAR(255) NOT NULL,
-    message TEXT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_id INT REFERENCES Users(user_id),
+    device_id INT REFERENCES Devices(device_id),
+    alert_type VARCHAR(50),
+    message TEXT,
+    timestamp TIMESTAMP DEFAULT NOW()
 );
+
+
+------------------------------
 
 -- Insert Users
 INSERT INTO Users (name, email) VALUES 
-('John Doe', 'john@example.com'),
-('Jane Smith', 'jane@example.com');
+('Kishore MK', 'kmk@example.com');
 
--- Insert Devices
+-- Insert Devices (Only Samsung)
 INSERT INTO Devices (user_id, brand, model, status) VALUES 
-(1, 'Samsung', 'Galaxy S21', 'Active'),
-(2, 'Google', 'Pixel 7', 'Inactive');
+(1, 'Samsung', 'SmartGlasses X', 'Active');
 
 -- Insert Features
-INSERT INTO Features (name) VALUES 
-('Voice Control'), 
-('Text-to-Speech'), 
+INSERT INTO Features (feature_name) VALUES 
+('Voice Control'),
+('Object Detection'),
+('Navigation Assistance'),
+('Text-to-Speech'),
 ('IoT Connectivity');
 
 -- Insert User Activities
 INSERT INTO UserActivities (user_id, device_id, action) VALUES 
 (1, 1, 'Turned on device'),
-(2, 2, 'Activated object detection');
+(1, 1, 'Activated object detection');
 
 -- Insert Settings
-INSERT INTO Settings (user_id, preference_key, preference_value) VALUES 
-(1, 'theme', 'dark'),
-(2, 'language', 'English');
+INSERT INTO Settings (user_id, preference_name, preference_value) VALUES 
+(1, 'Theme', 'Dark'),
+(1, 'Language', 'English');
 
 -- Insert Alerts
 INSERT INTO Alerts (user_id, device_id, alert_type, message) VALUES 
 (1, 1, 'Hazard', 'Pothole detected ahead!'),
-(2, 2, 'Navigation', 'Turn left in 10 meters');
+(1, 1, 'Navigation', 'Turn left in 10 meters');
